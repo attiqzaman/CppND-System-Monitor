@@ -47,6 +47,23 @@ string LinuxParser::Kernel() {
   return kernel;
 }
 
+long LinuxParser::Utilization() {
+  std::string cpu, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice, line;
+  std::ifstream stream(LinuxParser::kProcDirectory + LinuxParser::kStatFilename);
+  if (stream.is_open()) {
+      std::getline(stream, line);
+      std::istringstream linestream(line);
+      linestream >> cpu >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice;
+  }
+
+  // Method from https://stackoverflow.com/a/23376195
+  int idletime = stoi(idle) + stoi(iowait);
+  int nonidletime = stoi(user) + stoi(nice) + stoi(system) + stoi(irq) + stoi(softirq) + stoi(steal);
+  float totaltime = idletime + nonidletime;
+  
+  return (totaltime - idletime)/totaltime;
+}
+
 // BONUS: Update this to use std::filesystem
 vector<int> LinuxParser::Pids() {
   vector<int> pids;
@@ -124,11 +141,8 @@ long LinuxParser::ActiveJiffies(int pid) {
   return -1;
 }
 
-// TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+// long LinuxParser::ActiveJiffies() { return 0; }
+// long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
@@ -234,6 +248,8 @@ string LinuxParser::User(int pid) {
       }
     }
   }
+
+  return "undefined";
 }
 
 long LinuxParser::UpTime(int pid) {
