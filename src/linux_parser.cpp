@@ -84,7 +84,6 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() {
   string memory_key, memory_total, memory_free, kb;
   string line;
@@ -119,8 +118,7 @@ long LinuxParser::UpTime() {
   return stol(uptime);
 }
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
+// long LinuxParser::Jiffies() { return 0; }
 
 long LinuxParser::ActiveJiffies(int pid) {
   string line;
