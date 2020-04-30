@@ -16,7 +16,7 @@ using std::vector;
 
 System::System() : operationSystem_(LinuxParser::OperatingSystem()), kernel_(LinuxParser::Kernel())
 {
-    Processor cpu_ = Processor();
+    cpu_ = Processor();
     vector<int> pids = LinuxParser::Pids();
 
     for (int pid : pids) {
