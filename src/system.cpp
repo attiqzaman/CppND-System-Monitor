@@ -18,9 +18,12 @@ System::System() : operationSystem_(LinuxParser::OperatingSystem()), kernel_(Lin
 {
     Processor cpu_ = Processor();
     vector<int> pids = LinuxParser::Pids();
+
     for (int pid : pids) {
         processes_.push_back(Process(pid));
     }
+
+    std::sort(processes_.begin(), processes_.end());
 };
 
 Processor& System::Cpu() { return cpu_; }

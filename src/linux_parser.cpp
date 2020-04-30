@@ -253,14 +253,16 @@ long LinuxParser::UpTime(int pid) {
   string line;
   string var;
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+  long processStartTime = 0;
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream istream(line);
       std::istream_iterator<std::string> beg(istream), end;
       std::vector<std::string> vec(beg, end);
-      return stol(vec[21]) / sysconf(_SC_CLK_TCK); // use 22nd entry of from vec.
+      processStartTime = stol(vec[21]) / sysconf(_SC_CLK_TCK); // use 22nd entry of from vec.
     }
   }
 
-  return -1;
+  // Now subtract process start time from whole system's uptime to get to get uptime of this process.
+  return UpTime() - processStartTime;
 }

@@ -36,5 +36,5 @@ string Process::User() { return LinuxParser::User(pid_); }
 long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 bool Process::operator<(Process& a) {
-    return CpuUtilization() < a.CpuUtilization();
+    return CpuUtilization() > a.CpuUtilization();
 }
